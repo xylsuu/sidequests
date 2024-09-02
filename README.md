@@ -1,6 +1,6 @@
 # sidequests
 
-A new Flutter project.
+A mobile app with daily IRL sidequests!
 
 ## Getting Started
 
