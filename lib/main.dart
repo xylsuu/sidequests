@@ -29,17 +29,20 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
-  var liked = List.empty();
+  var likedList = <WordPair>[];
 
   void getNext() {
     current = WordPair.random();
     notifyListeners();
   }
 
-  void likeCurrent() {
-    if (!liked.contains(current))
-    liked.add(current);
-
+  void likeBtnPress() {
+    if (!likedList.contains(current)) {
+      likedList.add(current);
+    } else if (likedList.contains(current)) {
+      likedList.remove(current);
+    }
+    notifyListeners();
   }
 }
 
@@ -48,7 +51,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var pair = appState.current;
-    var liked = appState.liked;
+    var likedList = appState.likedList;
 
     return Scaffold(
       body: Center(
@@ -64,17 +67,48 @@ class MyHomePage extends StatelessWidget {
                 appState.getNext();
               }, 
               child: Text('NEXT')
-            )
+            ),
 
             ElevatedButton(
-              onPressed: ,
-              child: child
+              onPressed: () {
+                appState.likeBtnPress();
+              },
+              child: LikeButtonText(
+                pair: pair,
+                likedList: likedList,
+              )
             )
           ],
           
         ),
       ),
     );
+  }
+}
+
+class LikeButtonText extends StatelessWidget {
+  const LikeButtonText({
+    super.key,
+
+    required this.pair,
+    required this.likedList
+  });
+
+  final List likedList;
+  final WordPair pair;
+
+  String getLikedState() {
+    if (!likedList.contains(pair)) {
+      return '🖤 Like';
+    } else if (likedList.contains(pair)) {
+      return '💜 Unlike';
+    }
+    return '🖤 Like';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(getLikedState());
   }
 }
 
